@@ -1,65 +1,80 @@
-## 2023-01-25
-## Vinícius Viana viniciusviana@usp.br 
+## 2023.02.08
+## Keith Ando Ogawa - keith.ando@usp.br
+## Vinícius Viana de Paula - viniciusviana@usp.br
 
-# MAP5725 based on Roma's program.
+# MAP5725
 
-# Implicit Euler Method application to a unidimensional problem.
+# using Trapezoidal method and SAM to find the solution to a bidimensional problem.
 
 # (manufactured) problem with kwnown exact solution 
-    ## y' = y-t²+1, 0<=t<=2, y(0)=1/2
-    ## y_e(t) = (t + 1)**2 - 0.5*e^t
-                        
+#              (1) y_1'= y_2              1<=t<=5
+#              (2) y_2'= -(1/t)y_2        y_1(1) = 2; y_2(1) = 1
+                         
+
 import math
 import numpy as np
 
 #############################################################################
 
-def phi(t,y,dt,f):
+def phi(t1, y1, t2, y2, f):
     # define discretization function 
-    return f(t + dt, y)     # Implicit Euler 
-
+    return 0.5*(f(t1, y1)+f(t2, y2))     # euler 
 
 ############################################################################
 
 def f(t, y):
+    # bidimensional problem
+    f0 =  y[1]
+    f1 =  -(1/t)*y[1]
     
-    f0 =  y[0] - t**2 + 1
-    
-    return np.array([f0])
+    return np.array([f0, f1])
 
 ############################################################################
 
-def oneStepMethod(t0,y0,T,n):
+def implicitMethod(t0, y0, T, n):
     # compute approximate solution to the initial value problem
-    t_n = [t0];           # time interval: t in [t0,T]
-    y_n = [np.array(y0)]  # initial condition
-                         
-    h   = (T - t0) / n        # integration time step
 
-    fpi = 6    # fixed point method iterations   
-    while t_n[-1] < T:
-        ## initial guess to use fixed point method using Euler's method
-       y0_fp = y_n[-1] + h*f(t_n[-1], y_n[-1])
-       for j in range(fpi):
-           y0_fp = y_n[-1] + h*phi(t_n[-1], y0_fp, h, f)
-       y_n.append(y0_fp)
-       t_n.append(t_n[-1] + h)
+    y = [np.array(y0)]
+    t = [t0]
 
-    y_n = np.array(y_n)
+    h = (T - t0) / n
 
-    return (T - t0) / n, y_n[-1]
+    while t[-1] < T:
+        # initial guess
+        if(np.array(t).size > 1): 
+            ytil = y[-1] + h*phi(t[-1], y[-1], t[-2], y[-2], f)
+        else:
+            ytil = y[-1] + h*phi(t[-1], y[-1], t[-1], y[-1], f)
+        diff = 1.0
+
+        # fixed point iteration
+        r = 0
+        while r<20 and diff > 0.0001:
+            ytil0 = ytil
+            ytil = y[-1] + h*phi(t[-1], y[-1], t[-1] + h, ytil, f)
+            diff = np.linalg.norm(ytil - ytil0)
+            r = r + 1
+        y.append(ytil) # y(i+1) = ytil
+        t.append(t[-1] + h)
+    y = np.array(y)
+    
+    return (T - t0) / n, y[-1]
+
 ############################################################################
 
 def ye(t):
     # exact solution 
-    return (t + 1)**2 - 0.5*math.exp(t)
+    return np.array([np.log(t) + 2, (1/t)])
 
 ############################################################################
 
 def main():
-    # input math model data
-    t0=0; y0=[0.5];  # initial condition
-    T=2             # final time
+    # obtains the numerical convergence table based on parameters such as
+    # inicial conditions, final time and number of steps
+
+    # input numerical model data
+    t0=1; y0=np.array([2, 1]);  # initial condition
+    T=5             # final time
     
     # input numerical method data
     m=13;  h=[0]*m;   # number of cases to run. Initialize list of time steps
@@ -71,25 +86,24 @@ def main():
     for i in range(1,m+1): # run m times same code with h progressively small
         n=16*2**(i-1);     # number of time steps in i-th case
         
-        h[i-1],yn[i-1]=oneStepMethod(t0,y0,T,n);
-        
-        # verification via manufactured solution stragegy
+        h[i-1],yn[i-1]=implicitMethod(t0,y0,T,n);
+                
+        # verification via manufactured solution strategy
         # convergence table to verify the method correct implementation 
         p=q=r=0;
-
-        e = abs(ye(T)-yn[i-1][0])
+        
+        e = max(abs(ye(T)[0]-yn[i-1][0]), abs(ye(T)[1]-yn[i-1][1]))
         if i>1:
-            q = abs((ye(T)-yn[i-2][0])/(ye(T)-yn[i-1][0]));
-            r = h[i-2]/h[i-1];
+           q = abs(max(abs(ye(T)[0]-yn[i-2][0]), abs(ye(T)[1]-yn[i-2][1]))/e)
+           r = h[i-2]/h[i-1];
             
-            p = math.log(q)/math.log(r);
-            print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p));
-        else:
+           p = math.log(q)/math.log(r);
+           print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p))
+        else: 
             print("%5d & %9.3e & %9.3e & --------- \\\\" % (n,h[i-1],e))
         
     print(" "); 
-    
-############################################################################    
-            
-main()
 
+############################################################################
+         
+main()
