@@ -72,26 +72,26 @@ y_n_2, t_n_2 = implicitMethod(T, n_2, y_n_2, t_n_2, f)
 n_3 = 256                # time interval partition (discretization)
 y_n_3, t_n_3 = implicitMethod(T, n_3, y_n_3, t_n_3, f)
 
-## plotting the graphic for y1
+## plotting the graphic for x
 plt.plot(t_n_1, y_n_1[:,0], 'k:', label = 'n = 8')
 plt.plot(t_n_2, y_n_2[:,0], 'k--', label = 'n = 128')
 plt.plot(t_n_3, y_n_3[:,0], 'k-', label = 'n = 256')
 
 
 plt.xlabel('t   (em unidade de tempo)')
-plt.ylabel('y1(t)  (em unidade de y1)')
-plt.title('Aproximação Numérica da Variável de Estado y1')
+plt.ylabel('x(t)  (em unidade de x)')
+plt.title('Aproximação Numérica da Variável de Estado x')
 plt.legend()
 plt.show()
 
-## plotting the graphic for y2
+## plotting the graphic for y
 plt.plot(t_n_1, y_n_1[:,1], 'k:', label = 'n = 8')
 plt.plot(t_n_2, y_n_2[:,1], 'k--', label = 'n = 128')
 plt.plot(t_n_3, y_n_3[:,1], 'k-', label = 'n = 256')
 
 
 plt.xlabel('t   (em unidade de tempo)')
-plt.ylabel('y2(t)  (em unidade de y2)')
-plt.title('Aproximação Numérica da Variável de Estado y2')
+plt.ylabel('y(t)  (em unidade de y)')
+plt.title('Aproximação Numérica da Variável de Estado y')
 plt.legend()
 plt.show()
