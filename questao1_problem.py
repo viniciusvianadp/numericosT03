@@ -7,8 +7,8 @@
 # using Trapezoidal method and SAM to find the solution to a bidimensional problem.
 
 # problem with unkwnown exact solution 
-#              (1) x'= 1.2x - x² - xy/(x + 0.2)     0<=t<=5
-#              (2) y'= 1.5xy/(x + 0.2) - y          x(0) = 1; y(0) = 1
+#              (1) x'= 0.5x - 0.25xy               0<=t<=1.75
+#              (2) y'= -0.75y + 0.25xy          x(0) = 1.5; y(0) = 2
                          
 
 import math
@@ -24,8 +24,8 @@ def phi(t1, y1, t2, y2, f):
 
 def f(t, y):
     # bidimensional problem
-    f0 =  1.2*y[0] - (y[0])**2 - y[0]*y[1]/(y[0] + 0.2)
-    f1 =  1.5*y[0]*y[1]/(y[0] + 0.2) - y[1]
+    f0 =  0.5*y[0] - 0.25*y[0]*y[1]
+    f1 =  -0.375*y[0] + 0.25*y[0]*y[1]
     
     return np.array([f0, f1])
 
@@ -67,11 +67,11 @@ def main():
     # inicial conditions, final time and number of steps
 
     # input numerical model data
-    t0=0; y0=np.array([1, 1]);  # initial condition
-    T=5             # final time
+    t0=0; y0=np.array([1.5, 2]);  # initial condition
+    T=1.75             # final time
     
     # input numerical method data
-    m=13;  h=[0]*m;   # number of cases to run. Initialize list of time steps
+    m=11;  h=[0]*m;   # number of cases to run. Initialize list of time steps
     yn=[y0]*m;       # initialize list of approximations
     
     with open("behavior_convergence.txt", 'w', encoding='utf-8') as file2:
@@ -79,7 +79,7 @@ def main():
     
         e=p=q=r=s1=s2=0;
         for i in range(1,m+1):
-            n=16*2**(i-1); 
+            n=32*2**(i-1); 
 
             h[i-1],yn[i-1]=implicitMethod(t0,y0,T,n);
             if i>2:
@@ -95,6 +95,7 @@ def main():
                 p = math.log(q)/math.log(r);
             
                 e = (z2-z1)[0]**2 + (z2-z1)[1]**2; 
+                print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p))
                 file2.write("{:5d} & {:9.3e} & {:9.3e} & {:9.3e}\\\\\n".format(n,h[i-1],e,p)) 
 
 ############################################################################
