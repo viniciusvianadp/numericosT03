@@ -94,7 +94,7 @@ def main():
             
                 p = math.log(q)/math.log(r);
             
-                e = (z2-z1)[0]**2 + (z2-z1)[1]**2; 
+                e = ((z2-z1)[0]**2 + (z2-z1)[1]**2)/3; 
                 print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p))
                 file2.write("{:5d} & {:9.3e} & {:9.3e} & {:9.3e}\\\\\n".format(n,h[i-1],e,p)) 
 
