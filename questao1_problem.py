@@ -2,7 +2,7 @@
 ## Keith Ando Ogawa - keith.ando@usp.br
 ## Vinícius Viana de Paula - viniciusviana@usp.br
 
-# MAP5725
+# MAP3122
 
 # using Trapezoidal method and SAM to find the solution to a bidimensional problem.
 

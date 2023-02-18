@@ -2,7 +2,7 @@
 ## Keith Ando Ogawa - keith.ando@usp.br
 ## Vinícius Viana de Paula - viniciusviana@usp.br
 
-# MAP5725
+# MAP3122
 
 # plots for general implicit one-Step methods.
 
