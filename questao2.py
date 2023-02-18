@@ -4,6 +4,13 @@
 
 ## MAP3122
 
+## Obtenção das regiões de estabilidade absoluta dos métodos Runge-Kutta.
+## A obtenção das curvas se dá utilizando um ângulo theta (entre 0 e 2pi) para o qual se obtém
+## uma reta passando pelo ponto -1 + 0j; ocorre um deslocamento na reta a partir do ponto -1 + 0j
+## até encontrar um ponto para o qual |psi(z)| >= 1 e esse ponto é o chute inicial no método de 
+## Newton para obter um valor para um dos pontos da curva. Tal processo é executado para métodos
+## de 1 até 4 estágios.   
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -147,7 +154,12 @@ plt.plot(a3, b3, 'k-')
 plt.plot(a4, b4, 'k-')
 
 
-plt.xlim(-3, 3)
-plt.ylim(-3, 3)
+plt.xlim(-5.5, 5.5)
+plt.ylim(-4, 4)
+plt.xticks([-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5])
+
+plt.xlabel('Re(z)', loc='right')
+plt.ylabel('Im(z)', loc='top')
+plt.title('Regiões de estabilidade absoluta para RK')
 
 plt.show()
