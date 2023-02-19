@@ -4,113 +4,113 @@
 
 ## MAP3122
 
-## Obtenção das regiões de estabilidade absoluta dos métodos Runge-Kutta.
-## A obtenção das curvas se dá utilizando um ângulo theta (entre 0 e 2pi) para o qual se obtém
-## uma reta passando pelo ponto -1 + 0j; ocorre um deslocamento na reta a partir do ponto -1 + 0j
-## até encontrar um ponto para o qual |psi(z)| >= 1 e esse ponto é o chute inicial no método de 
-## Newton para obter um valor para um dos pontos da curva. Tal processo é executado para métodos
-## de 1 até 4 estágios.   
+## Obtains Runge-Kutta methods' absolute stability regions.
+## The curves are obtained using and angle between 0 and 2pi, for which is created
+## a straight line crossing (-1 + 0j); then, we deslocate throughout the line, starting
+## at (-1 + 0j), until its found a point for which |psi(z)| >= 1 and this point will be
+## the initial guess using Newton's method to obtain a value for a certain point in the curve.
+## This process is repeated to methods with stages between 1 and 4.
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 ############################################################
 
-def incremento(sinalR, sinalI, dz, theta): 
-    ## Avança na reta designada
+def increase(signalR, signalI, dz, theta): 
+    ## Advances throughout the straight line
 
-    if theta == 0 or theta == np.pi: ## Caso em que há movimento apenas na horizontal
-        p = sinalR*dz + 0j
-    elif theta == np.pi/2 or theta == 3*np.pi/2: ## Caso em que há movimento apenas na vertical
-        p = 0 + sinalI*dz*1j
+    if theta == 0 or theta == np.pi: ## Horizontal move only
+        p = signalR*dz + 0j
+    elif theta == np.pi/2 or theta == 3*np.pi/2: ## Vertical move only
+        p = 0 + signalI*dz*1j
     else: 
-        p = sinalR*dz + abs(np.tan(theta))*sinalI*dz*1j ## Há movimento no plano complexo
+        p = signalR*dz + abs(np.tan(theta))*signalI*dz*1j ## Moving in the complex plane
     return p
 
 ############################################################
 
-def percorreReta(theta, estagios):
-    dz = 1e-4 ## Espaçamento entre dois pontos escolhidos na reta
+def walkOnTheLine(theta, stages):
+    dz = 1e-4 ## Spacing between to points analyzed
 
-    ## SinalR indica o sentido para o qual o avanço ocorre em Re(z)
+    ## signalR indicates the advance direction in Re(z) 
     if theta == np.pi/2 or theta == 3*np.pi/2: 
-        sinalR = 0
+        signalR = 0
     else:
-        sinalR = np.cos(theta)/np.abs(np.cos(theta))
+        signalR = np.cos(theta)/np.abs(np.cos(theta))
     
-    ## SinalI indica o sentido para o qual o avanço ocorre em Im(z)
+    ## signalI indicates the advance direction in Im(z)
     if theta == 0 or theta == np.pi:
-        sinalI = 0
+        signalI = 0
     else:
-        sinalI = np.sin(theta)/np.abs(np.sin(theta))
+        signalI = np.sin(theta)/np.abs(np.sin(theta))
 
-    abs = absPsi(-1, estagios)
+    abs = absPsi(-1, stages)
     z = -1 + 0j
-    while abs < 1: ## Encontra o primeiro ponto para o qual |psi(z)| >= 1
-        z = z + incremento(sinalR, sinalI, dz, theta)
-        abs = absPsi(z, estagios)
+    while abs < 1: ## Finds a first point to which |psi(z)| >= 1
+        z = z + increase(signalR, signalI, dz, theta)
+        abs = absPsi(z, stages)
     return z 
 
 ############################################################
 
-def absPsi(z, estagios):
+def absPsi(z, stages):
 
-     if estagios == 1:
+     if stages == 1:
          abs = np.abs(1 + z)
-     elif estagios == 2:
+     elif stages == 2:
          abs = np.abs(1 + z + 1/2*z**2)
-     elif estagios == 3:
+     elif stages == 3:
          abs = np.abs(1 + z + 1/2*z**2 + 1/6*z**3)
-     else: ## estagios == 4
+     else: ## stages == 4
          abs = np.abs(1 + z + 1/2*z**2 + 1/6*z**3 + 1/24*z**4)
      return abs
 
 ############################################################
 
-def g(z, estagios): ## Função usada no método de Newton
-     ## Analisando os casos |psi(z)|=1
-     if estagios == 1:
+def g(z, stages): ## Function used in Newton's Method
+     ## Analyzing cases where |psi(z)|=1
+     if stages == 1:
          g = np.abs(1 + z) - 1 
-     elif estagios == 2:
+     elif stages == 2:
          g = np.abs(1 + z + 1/2*z**2) - 1
-     elif estagios == 3:
+     elif stages == 3:
          g = np.abs(1 + z + 1/2*z**2 + 1/6*z**3) - 1
-     else: ## estagios == 4
+     else: ## stages == 4
          g = np.abs(1 + z + 1/2*z**2 + 1/6*z**3 + 1/24*z**4) - 1
-     return g  ## Função definida
+     return g  ## Defined function
 
 ############################################################
 
-def dg(z, estagios): ## Derivada da função usada no método de Newton
-     if estagios == 1:
+def dg(z, stages): ## Derivative of the function used in Newton's Method
+     if stages == 1:
          dg = (1 + z)/np.abs(1 + z)
-     elif estagios == 2:
+     elif stages == 2:
          dg = (2 + 2*z + z**2)*(z + 1)/np.abs(2 + 2*z + z**2)
-     elif estagios == 3:
+     elif stages == 3:
          dg = (z**2 + 2*z + 2)*(6 + 6*z + 3*z**2 + z**3)/(2*np.abs(6 + 6*z + 3*z**2 + z**3)) 
-     else: ## estagios == 4
+     else: ## stages == 4
          dg = (6 + 6*z + 3*z**2 + z**3)*(24 + 24*z + 12*z**2 + 4*z**3 + z**4)/(6*np.abs(24 + 24*z + 12*z**2 + 4*z**3 + z**4))
-     return dg ## Derivada da  função
+     return dg ## Derivative of the function
 
 ############################################################
 
-def newton (theta, estagios):
-    delta = 1e-10 ## Delta pequeno que define quando o algoritmo interrompe
+def newton (theta, stages):
+    delta = 1e-10 ## Small delta that defines when the algorithm should end
 
-    if theta == 2*np.pi: ## intervalo: [0, 2pi]; caso de theta = 2pi é equivalente ao caso de theta = 0
+    if theta == 2*np.pi: ## theta is in [0, 2pi]; theta = 2pi is equivalent to theta = 0
         ang = 0 
     else:
         ang = theta
 
-    chute = percorreReta(ang, estagios)
+    guess = walkOnTheLine(ang, stages)
 
     for n in range(10):
-        prox_chute = chute - g(chute, estagios)/dg(chute, estagios)
-        if abs(prox_chute - chute) < delta or g(chute, estagios) > 1e-4:
+        next_guess = guess - g(guess, stages)/dg(guess, stages)
+        if abs(next_guess - guess) < delta or g(guess, stages) > 1e-4:
             break
-        chute = prox_chute
+        guess = next_guess
 
-    return prox_chute
+    return next_guess
 
 ############################################################
 
@@ -127,10 +127,10 @@ def RK4(theta):
   return newton(theta, 4)
 
 ############################################################
-## Obtenção dos valores para a obtenção das regiões de estabilidade absoluta
+## Obtaining values to generate absolute stability regions
 
 total=200
-t = np.linspace(0,2*np.pi,total) ## Vetor de 40 valores de x de 0 a 2pi
+t = np.linspace(0,2*np.pi,total) ## Array with 40 values from 0 to 2pi
 y1 = [0] * total; b1 = [0] * total; a1 = [0] * total
 y2 = [0] * total; b2 = [0] * total; a2 = [0] * total
 y3 = [0] * total; b3 = [0] * total; a3 = [0] * total
