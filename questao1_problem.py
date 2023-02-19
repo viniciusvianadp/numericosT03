@@ -71,7 +71,7 @@ def main():
     T=1.75             # final time
     
     # input numerical method data
-    m=11;  h=[0]*m;   # number of cases to run. Initialize list of time steps
+    m=13;  h=[0]*m;   # number of cases to run. Initialize list of time steps
     yn=[y0]*m;       # initialize list of approximations
     
     with open("behavior_convergence.txt", 'w', encoding='utf-8') as file2:
@@ -79,7 +79,7 @@ def main():
     
         e=p=q=r=s1=s2=0;
         for i in range(1,m+1):
-            n=32*2**(i-1); 
+            n=16*2**(i-1); 
 
             h[i-1],yn[i-1]=implicitMethod(t0,y0,T,n);
             if i>2:
