@@ -25,7 +25,7 @@ def phi(t1, y1, t2, y2, f):
 def f(t, y):
     # bidimensional problem
     f0 =  0.5*y[0] - 0.25*y[0]*y[1]
-    f1 =  -0.375*y[0] + 0.25*y[0]*y[1]
+    f1 =  -0.75*y[0] + 0.25*y[0]*y[1]
     
     return np.array([f0, f1])
 

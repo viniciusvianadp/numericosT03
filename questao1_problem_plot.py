@@ -8,7 +8,7 @@
 
 # problem with unkwnown exact solution 
 #              (1) x'= 0.5x - 0.25xy               0<=t<=1.75
-#              (2) y'= -0.375y + 0.25xy          x(0) = 1.5; y(0) = 2
+#              (2) y'= -0.75y + 0.25xy          x(0) = 1.5; y(0) = 2
 
 import matplotlib.pyplot as plt
 import numpy as np
