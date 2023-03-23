@@ -24,7 +24,7 @@ def phi(t1, y1, t2, y2, f):
 def f(t, y):
    # bidimensional problem
     f0 =  0.5*y[0] - 0.25*y[0]*y[1]
-    f1 =  -0.75*y[0] + 0.25*y[0]*y[1]
+    f1 =  -0.75*y[1] + 0.25*y[0]*y[1]
     
     return np.array([f0, f1])
 
@@ -36,10 +36,7 @@ def implicitMethod(T, n, yn, tn, f):
 
     while tn[-1] < T:
         # initial guess
-        if(np.array(tn).size > 1):
-            ytil = yn[-1] + dt*phi(tn[-1], yn[-1], tn[-2], yn[-2], f)
-        else:
-            ytil = yn[-1] + dt*phi(tn[-1], yn[-1], tn[-1], yn[-1], f)
+        ytil = yn[-1] + dt*f(tn[-1], yn[-1])
         diff = 1.0
 
         # fixed point iteration
