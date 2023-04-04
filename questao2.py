@@ -1,6 +1,4 @@
 ## 2023.02.18
-## Keith Ando Ogawa - keith.ando@usp.br
-## Vinicius Viana viniciusviana@usp.br
 
 ## MAP3122
 
